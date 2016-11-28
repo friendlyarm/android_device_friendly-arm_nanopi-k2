@@ -1,0 +1,5 @@
+allow zygote cpuctl_device:dir search;
+allow zygote self:process execmem;
+allow zygote mediaserver:process dyntransition;
+allow zygote mediaserver:process { getpgid setpgid };
+

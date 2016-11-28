@@ -1,0 +1,4 @@
+neverallow { -appdomain -platform_app } property_socket:sock_file write;
+# Write to various pseudo file systems.
+neverallow { -appdomain -platform_app } sysfs:dir_file_class_set write;
+

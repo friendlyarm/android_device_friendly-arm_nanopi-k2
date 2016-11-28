@@ -1,0 +1,57 @@
+# wifi connection service
+type boardinit, domain;
+type boardinit_exec, exec_type, file_type;
+
+init_daemon_domain(boardinit)
+
+allow boardinit system_prop:property_service set;
+allow boardinit property_socket:sock_file write;
+unix_socket_connect(boardinit, property, init)
+
+allow boardinit self:capability {
+    dac_override
+    sys_module
+};
+
+# Runs init.${ro.hardware}.sh
+allow boardinit shell_exec:file rx_file_perms;
+allow boardinit boardinit_exec:file rx_file_perms;
+
+# Run helpers from / or /system without changing domain.
+allow boardinit rootfs:file execute_no_trans;
+allow boardinit system_file:file execute_no_trans;
+
+# Write /sys/power/wake_lock
+wakelock_use(boardinit)
+
+# Trigger module auto-load.
+allow boardinit kernel:system module_request;
+
+# Remote control
+allow boardinit sysfs:file rw_file_perms;
+allow boardinit input_device:dir r_dir_perms;
+allow boardinit input_device:chr_file rw_file_perms;
+
+# Adjust OOM
+allow boardinit sysfs_lowmemorykiller:file setattr;
+allow boardinit sysfs_lowmemorykiller:file read;
+allow boardinit sysfs_lowmemorykiller:file open;
+
+# Bluetooth
+allow bluetooth sysfs:file write;
+
+# External storage
+allow vold labeledfs:filesystem { relabelfrom };
+allow vfat labeledfs:filesystem associate;
+
+# Access /dev/rfkill
+type rfkill_device, dev_type;
+allow wpa rfkill_device:chr_file rw_file_perms;
+
+# FFmpeg
+allow zygote self:process execmem;
+
+# Uart
+allow system_app tty_device:chr_file rw_file_perms;
+allow platform_app tty_device:chr_file rw_file_perms;
+
