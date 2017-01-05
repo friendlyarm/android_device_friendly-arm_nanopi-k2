@@ -16,13 +16,17 @@
 
 # kernel
 ifeq ($(TARGET_PREBUILT_KERNEL),)
-    LOCAL_KERNEL := device/friendly-arm/nanopi-k2-kernel/Image.lzo
+    LOCAL_KERNEL := device/friendly-arm/nanopi-k2-kernel/Image
 else
     LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
 endif
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_KERNEL):kernel
+    $(LOCAL_KERNEL):boot/Image \
+    device/friendly-arm/nanopi-k2-kernel/nanopi-k2.dtb:boot/nanopi-k2.dtb \
+    $(LOCAL_PATH)/boot/logo.bmp:boot/logo.bmp \
+    $(LOCAL_PATH)/boot/partmap.txt:partmap.txt \
+    $(LOCAL_PATH)/boot/u-boot.bin:u-boot.bin
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/init.recovery.nanopi-k2.rc:root/init.recovery.nanopi-k2.rc
